@@ -12,7 +12,7 @@ namespace ShopClock.Core
 
         public void Append(Punch punch)
         {
-            var data = $"{punch.Id},{punch.Timestamp},{punch.Type},{punch.Source},{punch.Note},{punch.Voids}";
+            var data = $"{punch.Id},{punch.Timestamp:O},{punch.Type},{punch.Source},{punch.Note},{punch.Voids}";
             var folder = Path.GetDirectoryName(_filePath);
             if (!string.IsNullOrEmpty(folder))
                 Directory.CreateDirectory(folder);
