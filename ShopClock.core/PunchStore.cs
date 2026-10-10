@@ -13,7 +13,7 @@ namespace ShopClock.Core
 
         public void Append(Punch punch)
         {
-            var data = $"{punch.Id},{punch.Timestamp:O},{punch.Type},{punch.Source},{punch.Note},{punch.Voids}";
+            var data = $"{punch.Id},{punch.Timestamp:O},{punch.Type},{punch.Source},{Escape(punch.Note)},{punch.Voids}";
             var folder = Path.GetDirectoryName(_filePath);
             if (!string.IsNullOrEmpty(folder))
                 Directory.CreateDirectory(folder);
@@ -38,7 +38,7 @@ namespace ShopClock.Core
                 if (string.IsNullOrWhiteSpace(lines[i]))
                     continue;
 
-                var parts = lines[i].Split(',');
+                var parts = ParseLine(lines[i]);
                 if (parts.Length != 6)
                     throw new FormatException(
                         $"punches.csv line {i + 1} has {parts.Length} columns, expected 6: {lines[i]}");
@@ -55,7 +55,45 @@ namespace ShopClock.Core
 
             return punches;
         }
+        private static string Escape(string? field) =>
+            "\"" + (field ?? "").Replace("\"", "\"\"") + "\"";
 
-        // Todo add custom methods for dealing with commas in notes.
+        private static string[] ParseLine(string line)
+        {
+            var fields = new List<string>();
+            var current = new StringBuilder();
+            bool inQuotes = false;
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                    {
+                        current.Append('"');
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    // end of field
+                    fields.Add(current.ToString());
+                    current.Clear();
+                }
+                else
+                {
+                    current.Append(c);
+                }
+
+            }
+
+            fields.Add(current.ToString());
+            return fields.ToArray();
+        }   
     }
 }

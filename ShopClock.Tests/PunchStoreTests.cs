@@ -73,14 +73,23 @@ public class PunchStoreTests : IDisposable
         Assert.Empty(store.ReadAll());
     }
 
-    // EXPECTED TO FAIL until comma escaping is added (Sprint 1, step 3).
-    // Right now ReadAll throws FormatException because the note splits into extra columns.
     [Fact]
     public void Note_with_comma_round_trips()
     {
         var store = new PunchStore(_path);
         var punch = new Punch(Guid.NewGuid(), Central(5, 17, 15), PunchType.Out, PunchSource.Manual,
             "Forgot to punch, left 5:15");
+
+        store.Append(punch);
+
+        Assert.Equal(punch, store.ReadAll().Single());
+    }
+    [Fact]
+    public void Note_with_quotes_and_comma_round_trips()
+    {
+        var store = new PunchStore(_path);
+        var punch = new Punch(Guid.NewGuid(), Central(5, 17, 15), PunchType.Out, PunchSource.Manual,
+            "Owner said \"leave early\", ok");
 
         store.Append(punch);
 
