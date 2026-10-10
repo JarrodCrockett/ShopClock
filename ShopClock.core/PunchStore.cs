@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection.PortableExecutable;
 using System.Text;
 
@@ -21,7 +22,40 @@ namespace ShopClock.Core
                 File.WriteAllText(_filePath, Header + Environment.NewLine);
 
             File.AppendAllText(_filePath, data + Environment.NewLine);
-            // Implement logic to save the punch to a file or database
         }
+
+        public IReadOnlyList<Punch> ReadAll()
+        {
+            var punches = new List<Punch>();
+
+            if (!File.Exists(_filePath))
+                return punches;
+
+            var lines = File.ReadAllLines(_filePath);
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(lines[i]))
+                    continue;
+
+                var parts = lines[i].Split(',');
+                if (parts.Length != 6)
+                    throw new FormatException(
+                        $"punches.csv line {i + 1} has {parts.Length} columns, expected 6: {lines[i]}");
+
+                var id = Guid.Parse(parts[0]);
+                var timestamp = DateTimeOffset.Parse(parts[1], CultureInfo.InvariantCulture);
+                var type = Enum.Parse<PunchType>(parts[2]);
+                var source = Enum.Parse<PunchSource>(parts[3]);
+                string? note = string.IsNullOrEmpty(parts[4]) ? null : parts[4];
+                Guid? voids = string.IsNullOrEmpty(parts[5]) ? null : Guid.Parse(parts[5]);
+
+                punches.Add(new Punch(id, timestamp, type, source, note, voids));
+            }
+
+            return punches;
+        }
+
+        // Todo add custom methods for dealing with commas in notes.
     }
 }

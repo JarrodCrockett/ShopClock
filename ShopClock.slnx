@@ -1,5 +1,5 @@
 <Solution>
   <Project Path="ShopClock.App/ShopClock.App.csproj" />
-  <Project Path="ShopClock.core/ShopClock.core.csproj" />
+  <Project Path="ShopClock.core/ShopClock.core.csproj" DisplayName="ShopClock.Core" />
   <Project Path="ShopClock.Tests/ShopClock.Tests.csproj" />
 </Solution>

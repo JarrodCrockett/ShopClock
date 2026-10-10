@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ShopClock.core\ShopClock.core.csproj" />
+    <ProjectReference Include="..\ShopClock.core\ShopClock.Core.csproj" />
     <ProjectReference Include="..\ShopClock.Tests\ShopClock.Tests.csproj" />
   </ItemGroup>
 
