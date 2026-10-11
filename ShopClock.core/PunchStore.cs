@@ -31,9 +31,16 @@ namespace ShopClock.Core
             if (!File.Exists(_filePath))
                 return punches;
 
-            var lines = File.ReadAllLines(_filePath);
+            var lines = new List<string>();
+            using (var stream = new FileStream(_filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var reader = new StreamReader(stream))
+            {
+                string? line;
+                while ((line = reader.ReadLine()) != null)
+                    lines.Add(line);
+            }
 
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 1; i < lines.Count; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i]))
                     continue;
