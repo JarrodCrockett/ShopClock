@@ -14,29 +14,39 @@ namespace ShopClock.App
 
         private void RefreshStatus()
         {
-            var punches = _store.ReadAll();
-            var shifts = ShiftBuilder.Build(punches);
-            var last = shifts.LastOrDefault();
-            if (last is null)
-            {
-                clockButton.Text = "Clock In";
-                statusLabel.Text = "Not clocked in.";
-            }
-            else if (last.IsOpen)
-            {
-                clockButton.Text = "Clock Out";
-                statusLabel.Text = $"Clocked in since {last.In!.Value:h:mm tt}";
-            }
+            var last = GetLastShift();
+            clockButton.Text = GetClockButtonText(last);
+            statusLabel.Text = GetStatusLabelText(last);
+        }
+
+        private Shift? GetLastShift() => ShiftBuilder.Build(_store.ReadAll()).LastOrDefault();
+
+        private string GetClockButtonText(Shift? shift)
+        {
+            if (shift is null || !shift.IsOpen)
+                return "Clock In";
             else
-            {
-                clockButton.Text = "Clock In";
-                statusLabel.Text = $"Last shift ended {last.Out!.Value:ddd h:mm tt}";
-            }
+                return "Clock Out";
+        }
+
+        private string GetStatusLabelText(Shift? shift)
+        {
+            if (shift is null)
+                return "Not clocked in.";
+            else if (shift.IsOpen)
+                return $"Clocked in since {shift.In!.Value:h:mm tt}";
+            else
+                return $"Last shift ended {shift.Out!.Value:ddd h:mm tt}";
         }
 
         private void clockButton_Click(object sender, EventArgs e)
         {
+            var last = GetLastShift();
+            var type = last?.IsOpen == true ? PunchType.Out : PunchType.In;
 
+            var punch = Punch.Now(type);
+            _store.Append(punch);
+            RefreshStatus();
         }
     }
 }
