@@ -5,6 +5,7 @@ namespace ShopClock.App
     public partial class MainForm : Form
     {
         private readonly PunchStore _store;
+        private const int ClickCooldownMs = 1000;
         public MainForm(PunchStore store)
         {
             InitializeComponent();
@@ -14,12 +15,17 @@ namespace ShopClock.App
 
         private void RefreshStatus()
         {
-            var last = GetLastShift();
+            var punches = _store.ReadAll();
+            var last = GetLastShift(punches);
+            var today = DateOnly.FromDateTime(DateTime.Now);
+            var todayHours = ReportService.BuildReport(punches, today, today).TotalHours;
+
             clockButton.Text = GetClockButtonText(last);
             statusLabel.Text = GetStatusLabelText(last);
+            todayLabel.Text = $"Today: {todayHours:0.00} hrs";
         }
 
-        private Shift? GetLastShift() => ShiftBuilder.Build(_store.ReadAll()).LastOrDefault();
+        private Shift? GetLastShift(IReadOnlyList<Punch> punches) => ShiftBuilder.Build(punches).LastOrDefault();
 
         private string GetClockButtonText(Shift? shift)
         {
@@ -35,20 +41,31 @@ namespace ShopClock.App
                 return "Not clocked in.";
             else if (shift.IsOpen)
                 return $"Clocked in since {shift.In!.Value:h:mm tt}";
+            else if (shift.Duration is { } worked)
+                return $"Last shift ended {shift.Out!.Value:ddd h:mm tt} ({worked.TotalHours:0.00} hrs)";
             else
                 return $"Last shift ended {shift.Out!.Value:ddd h:mm tt}";
         }
 
-        private void clockButton_Click(object sender, EventArgs e)
+        private async void clockButton_Click(object sender, EventArgs e)
         {
-            var last = GetLastShift();
-            var type = last?.IsOpen == true ? PunchType.Out : PunchType.In;
+            clockButton.Enabled = false;
+            try
+            {
+                var last = GetLastShift(_store.ReadAll());
+                var type = last?.IsOpen == true ? PunchType.Out : PunchType.In;
 
-            var punch = Punch.Now(type);
-            if (!TrySavePunch(Punch.Now(type)))
-                return;
+                var punch = Punch.Now(type);
+                if (!TrySavePunch(punch))
+                    return;
 
-            RefreshStatus();
+                RefreshStatus();
+            }
+            finally
+            {
+                await Task.Delay(ClickCooldownMs);
+                clockButton.Enabled = true;
+            }
         }
 
         private bool TrySavePunch(Punch punch)

@@ -28,36 +28,47 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.clockButton = new Button();
+            clockButton = new Button();
             statusLabel = new Label();
+            todayLabel = new Label();
             SuspendLayout();
             // 
             // clockButton
             // 
-            this.clockButton.Location = new Point(224, 171);
-            this.clockButton.Name = "clockButton";
-            this.clockButton.Size = new Size(183, 78);
-            this.clockButton.TabIndex = 0;
-            this.clockButton.Text = "Clock In";
-            this.clockButton.UseVisualStyleBackColor = true;
-            this.clockButton.Click += this.clockButton_Click;
+            clockButton.Location = new Point(224, 171);
+            clockButton.Name = "clockButton";
+            clockButton.Size = new Size(183, 78);
+            clockButton.TabIndex = 0;
+            clockButton.Text = "Clock In";
+            clockButton.UseVisualStyleBackColor = true;
+            clockButton.Click += clockButton_Click;
             // 
             // statusLabel
             // 
             statusLabel.AutoSize = true;
-            statusLabel.Location = new Point(309, 131);
+            statusLabel.Location = new Point(224, 127);
             statusLabel.Name = "statusLabel";
             statusLabel.Size = new Size(39, 15);
             statusLabel.TabIndex = 1;
             statusLabel.Text = "Status";
+            // 
+            // todayLabel
+            // 
+            todayLabel.AutoSize = true;
+            todayLabel.Location = new Point(224, 279);
+            todayLabel.Name = "todayLabel";
+            todayLabel.Size = new Size(85, 15);
+            todayLabel.TabIndex = 2;
+            todayLabel.Text = "Today: 0.00 hrs";
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(todayLabel);
             Controls.Add(statusLabel);
-            Controls.Add(this.clockButton);
+            Controls.Add(clockButton);
             Name = "MainForm";
             Text = "ShopClock";
             ResumeLayout(false);
@@ -68,5 +79,6 @@
 
         private Button clockButton;
         private Label statusLabel;
+        private Label todayLabel;
     }
 }
