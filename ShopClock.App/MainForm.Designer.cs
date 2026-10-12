@@ -31,6 +31,7 @@
             clockButton = new Button();
             statusLabel = new Label();
             todayLabel = new Label();
+            reportButton = new Button();
             SuspendLayout();
             // 
             // clockButton
@@ -61,11 +62,22 @@
             todayLabel.TabIndex = 2;
             todayLabel.Text = "Today: 0.00 hrs";
             // 
+            // reportButton
+            // 
+            reportButton.Location = new Point(679, 408);
+            reportButton.Name = "reportButton";
+            reportButton.Size = new Size(109, 30);
+            reportButton.TabIndex = 3;
+            reportButton.Text = "Hours/Report";
+            reportButton.UseVisualStyleBackColor = true;
+            reportButton.Click += reportButton_Click;
+            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
+            Controls.Add(reportButton);
             Controls.Add(todayLabel);
             Controls.Add(statusLabel);
             Controls.Add(clockButton);
@@ -80,5 +92,6 @@
         private Button clockButton;
         private Label statusLabel;
         private Label todayLabel;
+        private Button reportButton;
     }
 }

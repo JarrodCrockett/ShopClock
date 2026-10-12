@@ -83,5 +83,11 @@ namespace ShopClock.App
                 return false;
             }
         }
+
+        private void reportButton_Click(object sender, EventArgs e)
+        {
+            using var report = new ReportForm(_store);
+            report.ShowDialog(this);
+        }
     }
 }
