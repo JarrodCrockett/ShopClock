@@ -74,5 +74,34 @@ namespace ShopClock.App
                     LoadReport();
             }
         }
+
+        private void deleteButton_Click(object sender, EventArgs e)
+        {
+            if (reportGrid.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Select a row to delete first.", "ShopClock");
+                return;
+            }
+
+            var row = _currentRows[reportGrid.SelectedRows[0].Index];
+
+            var reason = Microsoft.VisualBasic.Interaction.InputBox(
+                $"Delete the shift on {row.Date:ddd M/d} " +
+                $"({row.In?.ToString("h:mm tt") ?? "?"} – {row.Out?.ToString("h:mm tt") ?? "?"})?\n\n" +
+                "Enter a reason:", "Delete shift").Trim();
+
+            if (reason.Length == 0)
+                return;   // Cancel, or no reason given: do nothing
+
+            var now = DateTimeOffset.Now;
+            var voids = new[] { row.InPunchId, row.OutPunchId }
+                .Where(id => id is not null)
+                .Select(id => new Punch(Guid.NewGuid(), now, PunchType.In, PunchSource.Manual,
+                                        $"Deleted {now:M/d h:mm tt}: {reason}", id))
+                .ToList();
+
+            if (PunchSaver.TrySaveRange(_store, voids))
+                LoadReport();
+        }
     }
 }

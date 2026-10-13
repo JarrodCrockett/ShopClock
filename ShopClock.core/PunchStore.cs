@@ -11,18 +11,30 @@ namespace ShopClock.Core
         private readonly string _filePath = filePath;
         private const string Header = "Id,Timestamp,Type,Source,Note,Voids";
 
-        public void Append(Punch punch)
+        public void Append(Punch punch) => AppendRange([punch]);
+
+        public void AppendRange(IEnumerable<Punch> punches)
         {
-            var data = $"{punch.Id},{punch.Timestamp:O},{punch.Type},{punch.Source},{Escape(punch.Note)},{punch.Voids}";
+            var lines = punches.Select(ToCsvLine).ToList();
+            if (lines.Count == 0)
+                return;
+
+            EnsureFileWithHeader();
+            File.AppendAllText(_filePath, string.Join(Environment.NewLine, lines) + Environment.NewLine);
+        }
+
+        private void EnsureFileWithHeader()
+        {
             var folder = Path.GetDirectoryName(_filePath);
             if (!string.IsNullOrEmpty(folder))
                 Directory.CreateDirectory(folder);
 
             if (!File.Exists(_filePath))
                 File.WriteAllText(_filePath, Header + Environment.NewLine);
-
-            File.AppendAllText(_filePath, data + Environment.NewLine);
         }
+
+        private static string ToCsvLine(Punch p) =>
+            $"{p.Id},{p.Timestamp:o},{p.Type},{p.Source},{Escape(p.Note)},{p.Voids}";
 
         public IReadOnlyList<Punch> ReadAll()
         {

@@ -107,4 +107,16 @@ public class ShiftBuilderTests
     {
         Assert.Empty(ShiftBuilder.Build([]));
     }
+
+    [Fact]
+    public void Shift_remembers_its_punch_ids()
+    {
+        var inPunch = P(PunchType.In, 5, 8, 0);
+        var outPunch = P(PunchType.Out, 5, 16, 0);
+
+        var shift = Assert.Single(ShiftBuilder.Build([inPunch, outPunch]));
+
+        Assert.Equal(inPunch.Id, shift.InPunchId);
+        Assert.Equal(outPunch.Id, shift.OutPunchId);
+    }
 }

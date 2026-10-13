@@ -95,4 +95,16 @@ public class PunchStoreTests : IDisposable
 
         Assert.Equal(punch, store.ReadAll().Single());
     }
+
+    [Fact]
+    public void AppendRange_writes_all_punches()
+    {
+        var store = new PunchStore(_path);
+        var a = new Punch(Guid.NewGuid(), Central(5, 8, 0), PunchType.In, PunchSource.Clock);
+        var b = new Punch(Guid.NewGuid(), Central(5, 16, 0), PunchType.Out, PunchSource.Clock);
+
+        store.AppendRange([a, b]);
+
+        Assert.Equal([a, b], store.ReadAll());
+    }
 }

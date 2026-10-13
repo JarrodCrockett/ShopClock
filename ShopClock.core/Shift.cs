@@ -15,7 +15,9 @@ public record Shift(
     DateTimeOffset? Out,
     ShiftProblem Problem,
     bool HasManualPunch,
-    string? Notes)
+    string? Notes,
+    Guid? InPunchId,
+    Guid? OutPunchId)
 {
     /// <summary>The shift belongs to the local date you clocked in (or out, if the In is missing).</summary>
     public DateOnly Date => DateOnly.FromDateTime((In ?? Out)!.Value.DateTime);
@@ -37,6 +39,8 @@ public record Shift(
             outPunch?.Timestamp,
             problem,
             inPunch?.Source == PunchSource.Manual || outPunch?.Source == PunchSource.Manual,
-            joined.Length == 0 ? null : joined);
+            joined.Length == 0 ? null : joined,
+            inPunch?.Id,
+            outPunch?.Id);
     }
 }

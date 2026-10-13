@@ -38,6 +38,7 @@
             addPunchButton = new Button();
             manualLegend = new Label();
             problemLegend = new Label();
+            delete = new Button();
             ((System.ComponentModel.ISupportInitialize)reportGrid).BeginInit();
             SuspendLayout();
             // 
@@ -118,7 +119,7 @@
             // addPunchButton
             // 
             addPunchButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            addPunchButton.Location = new Point(780, 590);
+            addPunchButton.Location = new Point(690, 590);
             addPunchButton.Name = "addPunchButton";
             addPunchButton.Size = new Size(133, 23);
             addPunchButton.TabIndex = 7;
@@ -148,11 +149,23 @@
             problemLegend.TabIndex = 9;
             problemLegend.Text = "Red = missing punch";
             // 
+            // delete
+            // 
+            delete.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            delete.Location = new Point(829, 590);
+            delete.Name = "delete";
+            delete.Size = new Size(75, 23);
+            delete.TabIndex = 10;
+            delete.Text = "Delete Row";
+            delete.UseVisualStyleBackColor = true;
+            delete.Click += deleteButton_Click;
+            // 
             // ReportForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1005, 627);
+            Controls.Add(delete);
             Controls.Add(problemLegend);
             Controls.Add(manualLegend);
             Controls.Add(addPunchButton);
@@ -182,5 +195,6 @@
         private Button addPunchButton;
         private Label manualLegend;
         private Label problemLegend;
+        private Button delete;
     }
 }
