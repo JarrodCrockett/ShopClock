@@ -64,5 +64,15 @@ namespace ShopClock.App
                     style.BackColor = Color.LightYellow;
             }
         }
+
+        private void addPunchButton_Click(object sender, EventArgs e)
+        {
+            using var dialog = new AddPunchForm();
+            if (dialog.ShowDialog(this) == DialogResult.OK && dialog.Result is { } punch)
+            {
+                if (PunchSaver.TrySave(_store, punch))
+                    LoadReport();
+            }
+        }
     }
 }

@@ -35,6 +35,9 @@
             totalLabel = new Label();
             fromLabel = new Label();
             toLabel = new Label();
+            addPunchButton = new Button();
+            manualLegend = new Label();
+            problemLegend = new Label();
             ((System.ComponentModel.ISupportInitialize)reportGrid).BeginInit();
             SuspendLayout();
             // 
@@ -86,7 +89,7 @@
             totalLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             totalLabel.AutoSize = true;
             totalLabel.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            totalLabel.Location = new Point(103, 581);
+            totalLabel.Location = new Point(103, 586);
             totalLabel.Name = "totalLabel";
             totalLabel.Size = new Size(126, 25);
             totalLabel.TabIndex = 4;
@@ -112,11 +115,47 @@
             toLabel.TabIndex = 6;
             toLabel.Text = "To:";
             // 
+            // addPunchButton
+            // 
+            addPunchButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            addPunchButton.Location = new Point(780, 590);
+            addPunchButton.Name = "addPunchButton";
+            addPunchButton.Size = new Size(133, 23);
+            addPunchButton.TabIndex = 7;
+            addPunchButton.Text = "Add missed punch";
+            addPunchButton.UseVisualStyleBackColor = true;
+            addPunchButton.Click += addPunchButton_Click;
+            // 
+            // manualLegend
+            // 
+            manualLegend.AutoSize = true;
+            manualLegend.BackColor = Color.LightYellow;
+            manualLegend.ForeColor = Color.Black;
+            manualLegend.Location = new Point(103, 555);
+            manualLegend.Name = "manualLegend";
+            manualLegend.Size = new Size(141, 15);
+            manualLegend.TabIndex = 8;
+            manualLegend.Text = "Yellow = entered by hand";
+            // 
+            // problemLegend
+            // 
+            problemLegend.AutoSize = true;
+            problemLegend.BackColor = Color.MistyRose;
+            problemLegend.ForeColor = Color.Black;
+            problemLegend.Location = new Point(106, 571);
+            problemLegend.Name = "problemLegend";
+            problemLegend.Size = new Size(119, 15);
+            problemLegend.TabIndex = 9;
+            problemLegend.Text = "Red = missing punch";
+            // 
             // ReportForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1005, 627);
+            Controls.Add(problemLegend);
+            Controls.Add(manualLegend);
+            Controls.Add(addPunchButton);
             Controls.Add(toLabel);
             Controls.Add(fromLabel);
             Controls.Add(totalLabel);
@@ -140,5 +179,8 @@
         private Label totalLabel;
         private Label fromLabel;
         private Label toLabel;
+        private Button addPunchButton;
+        private Label manualLegend;
+        private Label problemLegend;
     }
 }

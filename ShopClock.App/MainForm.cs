@@ -74,7 +74,7 @@ namespace ShopClock.App
                 }
 
                 var punch = Punch.Now(type);
-                if (!TrySavePunch(punch))
+                if (!PunchSaver.TrySave(_store, punch))
                     return;
 
                 RefreshStatus();
@@ -86,26 +86,11 @@ namespace ShopClock.App
             }
         }
 
-        private bool TrySavePunch(Punch punch)
-        {
-            try
-            {
-                _store.Append(punch);
-                return true;
-            }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-            {
-                MessageBox.Show(
-                    "Punch NOT saved. Is punches.csv open in Excel? Close it and try again.\n\n" + ex.Message,
-                    "ShopClock", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
-        }
-
         private void reportButton_Click(object sender, EventArgs e)
         {
             using var report = new ReportForm(_store);
             report.ShowDialog(this);
+            RefreshStatus();
         }
     }
 }
